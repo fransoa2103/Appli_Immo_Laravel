@@ -18,20 +18,26 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
     ];
+
+    /**
+     * Relation hasMany entre les champs annonces/'user_id' et users/'id'
+    */
+    public function annonces()
+    {
+        return $this->hasMany(Annonce::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var array<int, string>
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = [ 'password'];
 
     /**
      * The attributes that should be cast.

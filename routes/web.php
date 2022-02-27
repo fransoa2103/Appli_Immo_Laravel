@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,4 +11,29 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () { return view('annonce.index'); });
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\
+{
+    AnnonceController,
+    UserController,
+    RegisterController,
+    LoginController,
+    LogoutController
+};
+
+
+Route::get('register', [RegisterController::class, 'index'])->name('register');
+Route::get('login', [LoginController::class, 'index'])->name('login');
+Route::get('logout', [LogoutController::class, 'logout'])->name('logout');
+
+Route::post('register', [RegisterController::class, 'register'])->name('post.register');
+Route::post('login', [LoginController::class, 'login'])->name('post.login');
+
+Route::get('profile/{username}', [UserController::class, 'profile'])->name('user.profile');
+
+Route::resource('annonces', AnnonceController::class);
+
+Route::get('/', function() {return view ('welcome');});
+
+// Route::get('/', [AnnonceController::class, 'index']);
+

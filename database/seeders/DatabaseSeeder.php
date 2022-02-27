@@ -13,7 +13,10 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
+
     public function run()
+    // method magic has_ManyRelationships ici ->hasAnnonces puisqu'on fait la relation entre les 
+    // 2 tables Users et Annonces
     {
         User::factory(5)
         ->hasAnnonces(5)

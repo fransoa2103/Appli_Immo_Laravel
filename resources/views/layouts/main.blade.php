@@ -5,9 +5,9 @@
 
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content={{ config('app.name')}} >
+        <meta name="description" content={{ $description ?? '' }} >
 
-        <title>{{ config('app.name')}}</title>
+        <title>{{ $title ?? ''}}</title>
         
         <!-- GET BOOTSTRAP v4.5.2 -->
         
@@ -23,29 +23,47 @@
 
     <body>
 
-        <!-- Navigation -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
             <div class="container">
-                <h1 class="title"><a class="navbar-brand" href="#">Formation Laravel</a></h1>
+                <h1 class="title">
+                    <a class="navbar-brand" href="{{ url('/')}}">
+                        {{ config('app.name') }}
+                        @if(Auth::check() && Auth::user()->id)
+                            / Bonjour {{ Auth::user()->name }}
+                        @endif
+                    </a>
+                </h1>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="#">Accueil</a>
+                            <a class="nav-link" href="{{ url('/') }}">Accueil</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Connexion</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Inscription</a>
-                        </li>
+                        <!-- options du menu si aucun utilisateur n'est connecté -->
+                        <!-- si le helper 'guest' renvoie true vous n'est qu'un invité et donc non connecté -->
+                        <!-- alors le menu connexion ou register vous est proposé -->
+                        @guest
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('login') }}">Connexion</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('register') }}">Inscription</a>
+                            </li>
+                        @endguest
+                        <!-- sinon ici le helper 'auth' renvoie true et donc le menu logout est proposé -->
+                        @auth
+                            <li class="nav-item active">
+                                <a class="nav-link" href="{{ route('annonces.create') }}">Ajouter un article</a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="{{ route('logout') }}">Déconnexion</a>
+                            </li>
+                        @endauth
                     </ul>
                 </div>
-                <!-- /.collapse -->
             </div>
-            <!-- /.container -->
         </nav>
 
         <!-- Page Content -->
@@ -62,7 +80,7 @@
         <!-- /.container -->
         </footer>
         
-        <!-- GET JS BOOTSTRAP v3.5.1 -->
+        <!-- GET JS BOOTSTRAP -->
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 

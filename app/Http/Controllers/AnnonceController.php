@@ -25,7 +25,7 @@ class AnnonceController extends Controller
     }
     
     /**
-     * Display a listing of the resource.
+     * Affiche la liste complètes des annonces dans l'ordre chronologique croissant
      *
      * @return \Illuminate\Http\Response
      */
@@ -59,8 +59,9 @@ class AnnonceController extends Controller
 
     /**
      * enregistre les données du formulaire nouvelle annonce.
-     * On fait appel à la méthode 'formRequest' créee, ici c'est AnnonceRequest
-     * Les données du formulaire de création d'un nouvelle annonce sont envoyées pour controle
+     * On fait appel à la méthode 'formRequest' pour controle des champs à valider
+     * une fois l'annonce créee on est redirigé avec la fonction show
+     * pour afficher un message de succes et la nouvelle annonce
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -75,7 +76,94 @@ class AnnonceController extends Controller
         return redirect()->route('annonces.show', ['annonce'=>$annonce->reference_annonce])->withSuccess($success);
     }
 
-    // // Méthode 3 / Dans Models annonce.php, protected $guarded = ['user_id'];
+
+    
+
+    /**
+     * Affiche une seule annonce, après modification ou creation 
+     * également appelée si l'utilisateur a cliqué sur la référence de l'annonce
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Annonce $annonce)
+    {
+        $data = [
+            'title'=>config('app.name'),
+            'description'=>$annonce->reference_annonce,
+            'annonce'=>$annonce
+        ];
+        return view('annonce.show', $data);
+    }
+
+    /**
+    * seul un utilisateur authentifié peut éditer avant modification une annonce
+    * et doi t en être le créateur! on vérifie cela avec 'abort_if' si c'est bien le cas
+    * si ce n'est pas le cas une page erreur 403 est générée
+
+    * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Annonce $annonce)
+    {
+
+        abort_if(auth()->id() != $annonce->user_id, 403);
+
+        $data = [
+            'title'=> $description = 'Mise à jour de '.$annonce->reference_annonce,
+            'description'=>$description,
+            'annonce'=>$annonce,
+        ];
+        return view('annonce.edit', $data);   
+    }
+
+    /**
+     * On se sert de 'AnnonceRequest' et sa fonction 'Rule' pour valider le formulaire de modification de l'annonce
+     * ATTENTION 
+     * Si le propriétaire de l'annonce modifie la référence de son annonce,
+     * alors les modifications sont acceptées malgré le paramètre "unique" 
+     * demandé lors de la création d'une annonce et son champ "reference_annonce" 
+     * 
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(AnnonceRequest $request, Annonce $annonce)
+    {
+        abort_if(auth()->id() != $annonce->user_id, 403);
+        
+        $validateData = $request->validated();
+        $annonce = Auth::user()->annonces()->updateOrCreate(['id'=>$annonce->id], $validateData);
+        
+        $success = 'Annonce modifiée';
+        // Au cas ou la référence ait été modifiée, on redirige vers la page avec la "bonne" référence
+        return redirect()->route('annonces.show', ['annonce'=>$annonce->reference_annonce])->withSuccess($success);
+    }
+
+    /**
+     * Suppression d'un eannonce si l'utilisateur est connecté et en est le propriétaire
+     * 
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Annonce $annonce)
+    {
+        abort_if(auth()->id() != $annonce->user_id, 403);
+        
+        $annonce->delete();
+
+        $success = 'Votre annonce a bien été supprimée !';
+        return back()->withSuccess($success);
+    }
+
+    //****************************************************************************************************** */
+
+    /**
+     * Ci-dessous j'ai utilisé et testé plusieurs méthode en fonction de ma formation
+     */
+
+    // Méthode 3 / Dans Models annonce.php, protected $guarded = ['user_id'];
     // public function store(Request $request)
     // {
     //     $annonce = Auth::user()->annonces()->create(request()->validate([
@@ -89,6 +177,8 @@ class AnnonceController extends Controller
     //     $success = 'annonce ajouté';
     //     return back()->withSuccess($success);
     // }
+
+    // ***************************************************************************************
 
     // Methode 2/ on valide et insère en même temps
     // public function store(Request $request)
@@ -112,6 +202,8 @@ class AnnonceController extends Controller
     //     $success = 'annonce ajouté';
     //     return back()->withSuccess($success);
     // }
+
+    // ***************************************************************************************
 
     // Methode classique de store avec validate 
     // on valide, puis on instancie puis on créee (save)
@@ -139,81 +231,5 @@ class AnnonceController extends Controller
     //     return back()->withSuccess($success);
     // }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Annonce $annonce)
-    {
-        $data = [
-            'title'=>config('app.name'),
-            'description'=>$annonce->reference_annonce,
-            'annonce'=>$annonce
-        ];
-        return view('annonce.show', $data);
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Annonce $annonce)
-    {
-        // seul un user authentifié peut éditer une annonce
-        // mais en plus il doit en être le créateur!
-        // donc on vérifie avec abort_if si c'est bien le cas
-        // si ce n'est pas le cas une page erreur 403 est générée
-
-        abort_if(auth()->id() != $annonce->user_id, 403);
-
-        $data = [
-            'title'=> $description = 'Mise à jour de '.$annonce->reference_annonce,
-            'description'=>$description,
-            'annonce'=>$annonce,
-        ];
-        return view('annonce.edit', $data);   
-    }
-
-    /**
-     * On se sert de la class 'AnnonceRequest' et sa fonction 'Rule' pour valider le formaulaire de modification de l'annonce
-     * ATTENTION 
-     * Si le propriétaire de l'annonce modifie la référence de son annonce,
-     * alors les modifications apportées créeent une nouvelle annonce!
-     * l'idée est de garder évidemment la même référence.
-     * 
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(AnnonceRequest $request, Annonce $annonce)
-    {
-        abort_if(auth()->id() != $annonce->user_id, 403);
-        
-        $validateData = $request->validated();
-        $annonce = Auth::user()->annonces()->updateOrCreate(['id'=>$annonce->id], $validateData);
-        
-        $success = 'Annonce modifiée';
-        // Au cas ou la référence ait été modifiée, on redirige vers la page avec la "bonne" référence
-        return redirect()->route('annonces.show', ['annonce'=>$annonce->reference_annonce])->withSuccess($success);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Annonce $annonce)
-    {
-        abort_if(auth()->id() != $annonce->user_id, 403);
-        
-        $annonce->delete();
-
-        $success = 'Votre annonce a bien été supprimée !';
-        return back()->withSuccess($success);
-    }
 }

@@ -29,7 +29,7 @@ Route::get('logout', [LogoutController::class, 'logout'])->name('logout');
 Route::post('register', [RegisterController::class, 'register'])->name('post.register');
 Route::post('login', [LoginController::class, 'login'])->name('post.login');
 
-Route::get('profile/{username}', [UserController::class, 'profile'])->name('user.profile');
+Route::get('profile/{user}', [UserController::class, 'profile'])->name('user.profile');
 
 Route::resource('annonces', AnnonceController::class);
 

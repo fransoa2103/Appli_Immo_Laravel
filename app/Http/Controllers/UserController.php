@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class UserController extends Controller
 {
-    public function profile(){
-        // return "<h1>je suis l'utilisateur numéro #".$user->name."</h1>";
-        return "<h1>je suis l'utilisateur numéro </h1>";
+    public function profile(User $user)
+    {
+        return "<h1>Vous êtes sur le profil de ".$user->first_name." ".$user->last_name."</h1>";
     }
 
 }

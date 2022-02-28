@@ -2,10 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Models\Annonce;
 
 class AnnonceController extends Controller
 {
+    protected $articlePerPage = 3;
+    
+    public function __construct()
+    {
+        /*
+        *   on utilise le middleware 'auth' => App\Http\Middleware\Authenticatye.php,
+        *   pour filtrer l'accès des utilisateurs à la bdd.
+        *   En effet seul un membre connecté pourra créer, modifier ou supprimer un article.
+        *   ici en paramètre, on spécifie avec 'except' que seules les méthodes 'index' et 'show'
+        *   sont accessibles sans que auth = true, cad sans connexion utilisateur.
+        */
+        $this->middleware('auth')->except('index','show');        
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +30,15 @@ class AnnonceController extends Controller
      */
     public function index()
     {
-        return "voici toutes les annonces";
+        
+        $Annonces = Annonce::orderByDesc('id')->paginate($this->articlePerPage);
+
+        $data = [
+            'title'=>'Liste des Annonces - '.config('app.name'),
+            'description'=>'Retrouvez ici tous les Annonces '.config('app.name'),
+            'Annonces'=>$Annonces
+        ];
+        return view('annonce.index', $data);
     }
 
     /**
@@ -43,9 +68,15 @@ class AnnonceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Annonce $annonce)
     {
-        //
+        
+        $data = [
+            'reference_annonce'=>$annonce->reference_annonce.' - '.config('app.name'),
+            'description_annonce'=>$annonce->reference_annonce.'. '.Str::words($annonce->description_annonce, 10),
+            'annonce'=>$annonce
+        ];
+        return view('annonce.show', $data);
     }
 
     /**
@@ -56,7 +87,7 @@ class AnnonceController extends Controller
      */
     public function edit($id)
     {
-        //
+        // return "je suis article # ".$id;
     }
 
     /**

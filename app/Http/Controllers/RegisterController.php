@@ -7,6 +7,11 @@ use App\Models\User;
 
 class RegisterController extends Controller
 {
+    public function __construct()
+    {
+       $this->middleware('guest');
+    }
+    
     // formulaire d'inscription
     public function index(){
         // la page index renvoie simplement à la vue du formulaire d'inscription

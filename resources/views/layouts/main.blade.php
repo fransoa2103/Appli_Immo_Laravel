@@ -29,7 +29,7 @@
                     <a class="navbar-brand" href="{{ url('/')}}">
                         {{ config('app.name') }}
                         @if(Auth::check() && Auth::user()->id)
-                            / Bonjour {{ Auth::user()->name }}
+                            / Bonjour {{ Auth::user()->first_name }}
                         @endif
                     </a>
                 </h1>
@@ -55,7 +55,7 @@
                         <!-- sinon ici le helper 'auth' renvoie true et donc le menu logout est proposé -->
                         @auth
                             <li class="nav-item active">
-                                <a class="nav-link" href="{{ route('annonces.create') }}">Ajouter un article</a>
+                                <a class="nav-link" href="{{ route('annonces.create') }}">Ajouter une annonce</a>
                             </li>
                             <li class="nav-item active">
                                 <a class="nav-link" href="{{ route('logout') }}">Déconnexion</a>

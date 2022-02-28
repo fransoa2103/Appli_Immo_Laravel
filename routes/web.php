@@ -31,9 +31,7 @@ Route::post('login', [LoginController::class, 'login'])->name('post.login');
 
 Route::get('profile/{user}', [UserController::class, 'profile'])->name('user.profile');
 
-Route::resource('annonces', AnnonceController::class);
-
-Route::get('/', function() {return view ('welcome');});
-
-// Route::get('/', [AnnonceController::class, 'index']);
+// La page d'accueil (home page) est la page des annonces->index
+Route::resource('annonces', AnnonceController::class)->except('index');
+Route::get('/', [AnnonceController::class, 'index']);
 

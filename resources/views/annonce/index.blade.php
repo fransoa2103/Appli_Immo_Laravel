@@ -11,7 +11,7 @@
         <!-- /.col-lg-3 -->
         <div class="col-lg-9">
             
-            <!-- affiche un message de success lorsqu'un nouvel utilisateur s'inscrit ou se  connecte -->
+            <!-- affiche un message de success lorsqu'une annonce est créee,modifée ou supprimée avec succes  -->
             @if(session('success'))
                 <div class="alert alert-success mt-3">{{ session('success') }}</div>
             @endif
@@ -35,16 +35,16 @@
                         <a href="{{ route('user.profile', ['user'=>$annonce->user->id]) }}">{{ $annonce->user->first_name }} {{ $annonce->user->last_name }}</a></span> <br>
 
 
-                        {{-- @if(Auth::check() && Auth::user()->id == $annonce->user_id)
+                        @if(Auth::check() && Auth::user()->id == $annonce->user_id)
                             <div class="author mt-3">
-                                <a href="{{ route('Annonces.edit', ['annonce'=>$annonce->ref_annonce]) }}" class="btn btn-secondary">Modifier</a>
-                                <form style="display: inline;" action="{{ route('Annonces.destroy', ['annonce'=>$annonce->ref_annonce]) }}" method="POST">
+                                <a href="{{ route('annonces.edit', ['annonce'=>$annonce->reference_annonce]) }}" class="btn btn-info">Modifier</a>
+                                <form style="display: inline;" action="{{ route('annonces.destroy', ['annonce'=>$annonce->reference_annonce]) }}" method="POST">
                                     @method('DELETE')
                                     @csrf
-                                    <button type="submit" class="btn btn-danger">X</button>
+                                    <button type="submit" class="btn btn-danger">Supprimer</button>
                                 </form>
                             </div>
-                        @endif --}}
+                        @endif
 
                     </div>
                 </div>

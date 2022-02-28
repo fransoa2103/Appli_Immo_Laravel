@@ -23,7 +23,7 @@ class AnnonceFactory extends Factory
             'description_annonce'   => $this->faker->text(100),
             'prix_annonce'          => $this->faker->randomFloat(2, 10000, 10000000),
             'surface_habitable'     => $this->faker->randomFloat(2, 20, 100),
-            'nombre_de_piece'          => $this->faker->numberBetween(1, 15),
+            'nombre_de_piece'       => $this->faker->numberBetween(1, 15),
         ];
     }
 }

@@ -39,7 +39,7 @@ class LoginController extends Controller
         ]);
 
         if(Auth::attempt(['email'=>request('email'), 'password'=>request('password')])){
-            return redirect('/');
+            return redirect('profile/mesannonces');
         }
         return back()->withError('Erreur dans les identifiants!')->withInput();
         // facultatif '->withInput()' renvoie email dans le formulaire pour éviter de le resaisir si besoin

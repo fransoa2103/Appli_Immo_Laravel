@@ -16,17 +16,17 @@
         <!-- /.success -->
 
         <div class="card my-4">
-            <div class="card-body">
-                <h5 class="card-title">
-                    Annonce # {{ $annonce->reference_annonce }}</h5>
+            <div class="card-body ">
+                <h3 class="card-title text-primary font-weight-bold">
+                    Annonce # {{ $annonce->reference_annonce }}</h3>
                 <p class="card-text">
-                    description / {{ $annonce->description_annonce }}</p>
+                    description : {{ $annonce->description_annonce }}</p>
                 <p class="card-text">
-                    nb pièce(s) / {{ $annonce->nombre_de_piece }}</p>
+                    nb pièce(s) : {{ $annonce->nombre_de_piece }}</p>
                 <p class="card-text">
-                    Surface habitable m² /{{ $annonce->surface_habitable }}</p>
-                <p class="card-text bold">
-                    Prix / {{ $annonce->prix_annonce }} €</p>
+                    Surface habitable m² : {{ $annonce->surface_habitable }}</p>
+                <p class="card-text">
+                    Prix : {{ number_format($annonce->prix_annonce, 2, ',', ' ') }} €</p>
                 
                 <span class="time">Posté 
                     {{ $annonce->created_at->diffForHumans()}} le 

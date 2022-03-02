@@ -31,8 +31,8 @@ class AnnonceRequest extends FormRequest
             ['required', 'max:10', 'unique:annonces,reference_annonce'] :
             ['required', 'max:10', Rule::unique('annonces','reference_annonce')->ignore($this->annonce)],
             'description_annonce'   => ['required'],
-            'prix_annonce'          => ['required', 'digits_between:3,9'],
-            'surface_habitable'     => ['required', 'digits_between:2,3'],
+            'prix_annonce'          => ['required', 'digits_between:1,12'],
+            'surface_habitable'     => ['required', 'digits_between:1,6'],
             'nombre_de_piece'       => ['required', 'digits_between:1,2']
         ];
     }

@@ -15,6 +15,10 @@
             @if(session('success'))
                 <div class="alert alert-success mt-3">{{ session('success') }}</div>
             @endif
+            <!-- affiche un message de success lorsqu'une annonce est créee,modifée ou supprimée avec succes  -->
+            @if(session('error'))
+                <div class="alert alert-danger mt-3">{{ session('error') }}</div>
+            @endif
 
             {{-- début du post --}}
             @foreach($Annonces as $annonce)
@@ -30,12 +34,13 @@
                             {{ $annonce->created_at->diffForHumans()}} le 
                             {{ $annonce->created_at->isoFormat('LL')}}
                         </span>
-                        </br>
-                        <span class="author">par 
-                        <a href="{{ route('user.profile', ['user'=>$annonce->user->id]) }}">{{ $annonce->user->first_name }} {{ $annonce->user->last_name }}</a></span> <br>
-
-
+                        
                         @if(Auth::check() && Auth::user()->id == $annonce->user_id)
+                        <br>
+                            <span class="author"> 
+                                <a href="{{ route('user.profile', ['user'=>$annonce->user->id]) }}">Mon profil</a>
+                            </span>
+                        <br>
                             <div class="author mt-3">
                                 <a href="{{ route('annonces.edit', ['annonce'=>$annonce->reference_annonce]) }}" class="btn btn-info">Modifier</a>
                                 <form style="display: inline;" action="{{ route('annonces.destroy', ['annonce'=>$annonce->reference_annonce]) }}" method="POST">

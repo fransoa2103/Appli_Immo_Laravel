@@ -26,16 +26,16 @@
                 @csrf
                 {{-- <input type="hidden" name="_token" value="{{ csrf_token() }}" /> --}}
                 <div class="mb-3">
-                    <label for="first_name" class="form-label">Nom</label>
-                    <input type="text" name="first_name" class="form-control" value="{{old('first_name')}}">
-                    @error('first_name')
-                        <div class="error text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="mb-3">
                     <label for="last_name" class="form-label">Nom</label>
                     <input type="text" name="last_name" class="form-control" value="{{old('last_name')}}">
                     @error('last_name')
+                    <div class="error text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="mb-3">
+                    <label for="first_name" class="form-label">Prénom</label>
+                    <input type="text" name="first_name" class="form-control" value="{{old('first_name')}}">
+                    @error('first_name')
                         <div class="error text-danger">{{ $message }}</div>
                     @enderror
                 </div>

@@ -21,8 +21,8 @@ class AnnonceFactory extends Factory
             'user_id'               => User::factory(),
             'reference_annonce'     => $this->faker->regexify('[A-Z]{5}[0-4]{3}'),
             'description_annonce'   => $this->faker->text(100),
-            'prix_annonce'          => $this->faker->randomFloat(2, 10000, 10000000),
-            'surface_habitable'     => $this->faker->randomFloat(2, 20, 100),
+            'prix_annonce'          => $this->faker->randomFloat(2,99999,9999999),
+            'surface_habitable'     => $this->faker->randomFloat(2,9,999),
             'nombre_de_piece'       => $this->faker->numberBetween(1, 15),
         ];
     }

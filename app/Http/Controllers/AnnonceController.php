@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
+use App\Models\Annonce;
 use Illuminate\Http\Request;
 
-use App\Models\Annonce;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AnnonceRequest;
 
 class AnnonceController extends Controller
@@ -31,17 +32,61 @@ class AnnonceController extends Controller
      */
     public function index()
     {
+        // $Annonces = Annonce::orderByDesc('id')->paginate($this->annoncePerPage);
         
-        $Annonces = Annonce::orderByDesc('id')->paginate($this->annoncePerPage);
+        $tri = request()->query('tri', 'asc');
+        $libelle = request()->query('libelle', 'id');
+        
+        $user = Auth::user() ? Auth::user()->id : null ;
+
+        if ($tri == 'asc')
+        {
+            $Annonces = Annonce::orderBy($libelle)->where('user_id', '=', $user)->orWhere('user_id','>', 0)->paginate($this->annoncePerPage);
+        }
+        else
+        {
+            $Annonces = Annonce::orderByDesc($libelle)->where('user_id', '=', $user)->orWhere('user_id','>', 0)->paginate($this->annoncePerPage);
+        }
 
         $data = [
             'title'=>'Liste des Annonces - '.config('app.name'),
             'description'=>'Retrouvez ici tous les Annonces '.config('app.name'),
             'Annonces'=>$Annonces
         ];
+        
         return view('annonce.index', $data);
     }
+    /**
+     * Affiche la liste complètes des annonces dans l'ordre chronologique croissant
+     *
+     * @return \Illuminate\Http\Response
+     */
+    
+    public function mesannonces(User $user)
+    {
+        $tri = request()->query('tri', 'asc');
+        $libelle = request()->query('libelle', 'id');
 
+        $filter_user = Auth::user() ? Auth::user()->id : $user->id ;
+        // dd($user, $tri, $libelle);
+        
+        if ($tri == 'asc')
+        {
+            $Annonces = Annonce::orderBy($libelle)->where('user_id', '=', $filter_user)->paginate($this->annoncePerPage);
+        }
+        else
+        {
+            $Annonces = Annonce::orderByDesc($libelle)->where('user_id', '=', $filter_user)->paginate($this->annoncePerPage);
+        }
+
+        $data = [
+            'title'=>Auth::user()->first_name.'/Mes annonces',
+            'description'=>config('app.name').'/'.Auth::user()->first_name.'/'.Auth::user()->last_name.'/Mes annonces',
+            'Annonces'=>$Annonces
+        ];
+        return view('annonce.index', $data);
+    }
+    
     /**
      * Appel le formulaire de création d'une nouvelle Annonce.
      * 
@@ -75,9 +120,6 @@ class AnnonceController extends Controller
         $success = 'annonce ajouté';
         return redirect()->route('annonces.show', ['annonce'=>$annonce->reference_annonce])->withSuccess($success);
     }
-
-
-    
 
     /**
      * Affiche une seule annonce, après modification ou creation 

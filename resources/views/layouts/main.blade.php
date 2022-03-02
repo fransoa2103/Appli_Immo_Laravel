@@ -10,26 +10,20 @@
         <title>{{ $title ?? ''}}</title>
         
         <!-- GET BOOTSTRAP v4.5.2 -->
-        
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-
-        <!-- Dispose le body sous la nav bar -->
-        <style>
-            body { padding-top: 56px; }
-            h1.title{ font-size: 1.25rem; }
-        </style>
 
     </head>
 
     <body>
 
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
                 <h1 class="title">
                     <a class="navbar-brand" href="{{ url('/')}}">
-                        {{ config('app.name') }}
                         @if(Auth::check() && Auth::user()->id)
-                            / Bonjour {{ Auth::user()->first_name }}
+                            <p class="display-3">Bonjour {{ Auth::user()->first_name }} </p>
+                        @else
+                            {{config('app.name')}}  
                         @endif
                     </a>
                 </h1>
@@ -42,7 +36,7 @@
                             <a class="nav-link" href="{{ url('/') }}">Accueil</a>
                         </li>
                         <!-- options du menu si aucun utilisateur n'est connecté -->
-                        <!-- si le helper 'guest' renvoie true vous n'est qu'un invité et donc non connecté -->
+                        <!-- si le helper 'guest' renvoie true vous n'êtes qu'un invité et donc non connecté -->
                         <!-- alors le menu connexion ou register vous est proposé -->
                         @guest
                             <li class="nav-item">
@@ -56,6 +50,9 @@
                         @auth
                             <li class="nav-item active">
                                 <a class="nav-link" href="{{ route('annonces.create') }}">Ajouter une annonce</a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="{{ route('mesannonces')}}">Mes annonces</a>
                             </li>
                             <li class="nav-item active">
                                 <a class="nav-link" href="{{ route('logout') }}">Déconnexion</a>

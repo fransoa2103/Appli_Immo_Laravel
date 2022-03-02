@@ -20,8 +20,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('reference_annonce',10);
             $table->longText('description_annonce');
-            $table->float('prix_annonce',9,2);
-            $table->float('surface_habitable',4,2);
+            $table->float('prix_annonce',12,2);
+            $table->float('surface_habitable',6,2);
             $table->integer('nombre_de_piece');
             $table->timestamps();
         });
